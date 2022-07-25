@@ -1,0 +1,8 @@
+.mocks/
+node_modules
+.next
+.yalc.lock
+.yarn-error.log
+.yalc/*
+
+.history

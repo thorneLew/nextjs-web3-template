@@ -1,0 +1,1 @@
+export { WGTContract } from "./WGT";

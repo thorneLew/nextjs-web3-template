@@ -1,0 +1,16 @@
+{
+  "templatePath": "./pontTemplate",
+  "outDir": "./src/services",
+  "surrounding": "typeScript",
+  "origins": [
+    {
+      "originUrl": "http://127.0.0.1:3004/api/swagger",
+      "name": "nft",
+      "originType": "SwaggerV2"
+    }
+  ],
+  "mocks": {
+    "enable": true
+  },
+  "templateType": "fetch"
+}

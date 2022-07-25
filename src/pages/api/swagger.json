@@ -1,0 +1,3900 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "hipo-nft-server",
+        "title": "Hipo NFT API",
+        "contact": {
+            "name": "Teemo",
+            "url": "https://www.hipo.com",
+            "email": "teemo_qin@163.com"
+        },
+        "version": "1.0"
+    },
+    "host": "https://www.hipo.com",
+    "paths": {
+        "/account": {
+            "get": {
+                "description": "根据地址获取账户信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取账户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "0xD962E24F1630774aba2A77F49E5234E9E903D945",
+                        "description": "钱包地址",
+                        "name": "address",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回账户信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.NFTAccount"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "编辑个人信息",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "编辑个人信息",
+                "parameters": [
+                    {
+                        "description": "用户名称",
+                        "name": "username",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "个人头像",
+                        "name": "profile_img",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "个人头像链接,如果传图片以图片为准，没传图片时传链接，以链接为准",
+                        "name": "profile_img_url",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "个人主页banner",
+                        "name": "profile_banner",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "邮箱地址",
+                        "name": "email",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "描述",
+                        "name": "describes",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "其他链接",
+                        "name": "links",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否创建成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts": {
+            "get": {
+                "description": "获取账户列表信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取账户列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回账户列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.NFTAccount"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts_name": {
+            "get": {
+                "description": "判断账户名字是否被占用",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "判断账户名字是否被占用",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回创作者name和address",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.RespAccountPrimary"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts_search": {
+            "get": {
+                "description": "顶部导航栏搜索接口,返回top4相关的创作者",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "创作者搜索",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "查询关键词",
+                        "name": "keyword",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回账户列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.RespNavSearchAccount"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts_top": {
+            "get": {
+                "description": "These Creators are dope!/潜力创作者",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "These Creators are dope!/潜力创作者",
+                "responses": {
+                    "200": {
+                        "description": "返回潜力创作者列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.RespNavSearchAccount"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/asset": {
+            "get": {
+                "description": "获取NFT作品详情",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取NFT作品详情",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "作品id",
+                        "name": "token_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回作品详情",
+                        "schema": {
+                            "$ref": "#/definitions/models.NFTAsset"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建NFT",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "创建NFT",
+                "parameters": [
+                    {
+                        "description": "作品名称",
+                        "name": "name",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品图片",
+                        "name": "image_file",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品图片链接",
+                        "name": "image_url",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "其他链接",
+                        "name": "external_link",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "描述",
+                        "name": "describes",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "属性，json格式的",
+                        "name": "traits",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品集id",
+                        "name": "collection_id",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "所属公链",
+                        "name": "chain",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "供应数量",
+                        "name": "supply",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "所属分类",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "NFT合约信息",
+                        "name": "asset_contract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回token_id",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/asset/{contract}/{token_id}": {
+            "get": {
+                "description": "获取NFT作品metadata",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取NFT作品metadata",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "作品id",
+                        "name": "token_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回作品metadata",
+                        "schema": {
+                            "$ref": "#/definitions/models.NFTMeta"
+                        }
+                    }
+                }
+            }
+        },
+        "/asset_delete": {
+            "post": {
+                "description": "删除NFT",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "删除NFT",
+                "parameters": [
+                    {
+                        "description": "contract合约地址",
+                        "name": "contract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品id",
+                        "name": "token_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否删除成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/asset_hide": {
+            "post": {
+                "description": "修改NFT是否隐藏",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "修改NFT是否隐藏",
+                "parameters": [
+                    {
+                        "description": "NFT合约信息",
+                        "name": "contract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "NFT代币id",
+                        "name": "token_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "是否隐藏，填0为取消隐藏NFT，填1为隐藏NFT",
+                        "name": "is_hide",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/asset_minted": {
+            "post": {
+                "description": "将链上的nft代币同步到数据库",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "链上铸造NFT事件",
+                "parameters": [
+                    {
+                        "description": "NFT合约信息",
+                        "name": "contract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "NFT代币id",
+                        "name": "token_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "合约name",
+                        "name": "contract_name",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "合约代币symbol",
+                        "name": "contract_symbol",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "合约种类：ERC721|ERC1155",
+                        "name": "schema",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "tokenURI",
+                        "name": "token_uri",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "所属公链",
+                        "name": "chain",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "发起铸造事件的地址",
+                        "name": "creator",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "铸造给的地址",
+                        "name": "owner",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "txnHash",
+                        "name": "txn_hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "blockNo",
+                        "name": "block_no",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "timestamp",
+                        "name": "timestamp",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回数据是否同步成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/asset_move": {
+            "post": {
+                "description": "移动NFT到别到作品集",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "移动NFT到别到作品集",
+                "parameters": [
+                    {
+                        "description": "NFT主键信息{contract,token_id}，可以传多个",
+                        "name": "assets",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/requests.NftAssetPrimary"
+                            }
+                        }
+                    },
+                    {
+                        "description": "是否隐藏，填0为取消隐藏NFT，填1为隐藏NFT",
+                        "name": "collection_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/asset_transfer": {
+            "post": {
+                "description": "链上转移NFT事件同步到数据库",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "链上转移NFT事件",
+                "parameters": [
+                    {
+                        "description": "NFT合约信息",
+                        "name": "contract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "NFT代币id",
+                        "name": "token_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "from",
+                        "name": "from",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "to",
+                        "name": "to",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "txnHash",
+                        "name": "txn_hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "blockNo",
+                        "name": "block_no",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "timestamp",
+                        "name": "timestamp",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回数据是否同步成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/asset_update": {
+            "post": {
+                "description": "修改NFT",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "修改NFT",
+                "parameters": [
+                    {
+                        "description": "作品名称",
+                        "name": "name",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品图片",
+                        "name": "image_file",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品图片链接",
+                        "name": "image_url",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "描述",
+                        "name": "describes",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "属性，json格式的",
+                        "name": "traits",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品id",
+                        "name": "token_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "其他链接",
+                        "name": "external_link",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回token_id",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/assets": {
+            "get": {
+                "description": "获取NFT作品列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取NFT作品列表",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "所属分类",
+                        "name": "category",
+                        "in": "path"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "作品集id",
+                        "name": "collection_id",
+                        "in": "path"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "状态",
+                        "name": "status",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询关键词",
+                        "name": "keyword",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "币种",
+                        "name": "payment_token",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "价格区间(最低)",
+                        "name": "price_min",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "价格区间(最高)",
+                        "name": "price_max",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "是否隐藏，隐藏的列表填1",
+                        "name": "is_hide",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "所属地址",
+                        "name": "owner",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "创建地址",
+                        "name": "creator",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "traits属性搜索",
+                        "name": "traits",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序字段，最近活跃-updated_at;最新出价-last_bid_at;最近卖出-last_sale_at;价格-price;最新上架-last_maker_at;最新创建-created_at",
+                        "name": "order",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序方式，ASC 或者 DESC",
+                        "name": "order_direction",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回NFT作品列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/responses.RespTopAsset"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/assets_top": {
+            "get": {
+                "description": "Trending NFTs/流行NFTs",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "Trending NFTs/流行NFTs",
+                "responses": {
+                    "200": {
+                        "description": "返回流行作品列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.RespTopAsset"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/banners": {
+            "get": {
+                "description": "获取首页的展示banner",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取正在展示的banners",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "banner分类: 顶部banner-TOP; 动效卡-AMAZING",
+                        "name": "type",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回banner列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/responses.RespBanner"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/collection": {
+            "get": {
+                "description": "获取作品集信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取作品集信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "作品集id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "作品集slug，和id二选一，同时存在时以slug为准",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回作品集信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/responses.RespCollectionPage"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建或者修改作品集",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "创建或者修改作品集",
+                "parameters": [
+                    {
+                        "description": "作品集id",
+                        "name": "id",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品集名称",
+                        "name": "name",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "描述",
+                        "name": "describes",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "其他链接",
+                        "name": "links",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品链接",
+                        "name": "slug",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "所属公链",
+                        "name": "chain",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品集图片",
+                        "name": "image_file",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品集图片链接",
+                        "name": "image_url",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品集banner",
+                        "name": "banner",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "作品集banner链接",
+                        "name": "banner_url",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "featured_image",
+                        "name": "featured_image",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "featured_image链接",
+                        "name": "featured_image_url",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "所属分类",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "创作者版税",
+                        "name": "creator_fee",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "接收创作者版税对钱包地址,如果版税不为0,则钱包地址必填",
+                        "name": "creator_fee_address",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "支付币种",
+                        "name": "payment_tokens",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否创建成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/collection_delete": {
+            "post": {
+                "description": "删除作品集",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "删除作品集",
+                "parameters": [
+                    {
+                        "description": "作品集id",
+                        "name": "id",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否删除成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/collections": {
+            "get": {
+                "description": "获取作品集列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取作品集列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "所属分类",
+                        "name": "category",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "创建地址",
+                        "name": "creator",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序字段，7日成交额-thirty_day_volume;24小时成交额-one_day_volume;7日成交均价-seven_day_average_price;24小时成交均价-one_day_average_price;7日均价增长率-seven_day_change;24小时均价增长率-one_day_change;",
+                        "name": "order",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序方式，ASC 或者 DESC",
+                        "name": "order_direction",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询关键词",
+                        "name": "keyword",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回作品集列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/responses.RespTopCollection"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/collections_name": {
+            "get": {
+                "description": "查询作品集名字或者slug是否被占用",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "查询作品集名字或者slug是否被占用",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "作品集名字，和slug二选一",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "作品集slug，和name二选一",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回作品集",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.RespCollectionPrimary"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/collections_search": {
+            "get": {
+                "description": "顶部导航栏搜索接口,返回name相关的作品集",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "作品集搜索",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "查询关键词",
+                        "name": "keyword",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "返回数据数量",
+                        "name": "limit",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回作品集列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.RespNavSearchCollection"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/collections_top": {
+            "get": {
+                "description": "Notable Collections/热门合集",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "Notable Collections/热门合集",
+                "responses": {
+                    "200": {
+                        "description": "返回作品集列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.RespTopCollection"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contract_search": {
+            "get": {
+                "description": "根据合约地址获取同步的作品集数据",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "根据合约地址获取同步的作品集数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "address",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回banner列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/responses.RespCollectionPrimary"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/events": {
+            "get": {
+                "description": "获取事件列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取事件列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "作品集id",
+                        "name": "collection_id",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token_id",
+                        "name": "token_id",
+                        "in": "path"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "事件类型：Minted、Transfer、Canceled、List、Offer、Sale",
+                        "name": "event_type",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "账号地址",
+                        "name": "identity",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回事件列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.NFTEvent"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/favorite": {
+            "post": {
+                "description": "添加或者取消喜欢",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "添加或者取消喜欢",
+                "parameters": [
+                    {
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "token_id",
+                        "name": "token_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "是否喜欢",
+                        "name": "is_favorite",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否操作成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/favorite_count": {
+            "get": {
+                "description": "查询喜欢当前NFT的用户数量",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取喜欢数量",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token_id",
+                        "name": "token_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回标记了喜欢的数量",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/favorite_list": {
+            "get": {
+                "description": "获取喜欢当前NFT的用户",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取喜欢当前NFT的用户",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token_id",
+                        "name": "token_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回标记了喜欢的用户",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.NFTAccount"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/is_favorite": {
+            "get": {
+                "description": "查询当前地址对当前nft是否标记了喜欢",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "是否标记了喜欢",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token_id",
+                        "name": "token_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "钱包地址",
+                        "name": "address",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否标记喜欢",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/my_favorites": {
+            "get": {
+                "description": "获取我喜欢的NFT列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取我喜欢的NFT列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "钱包地址",
+                        "name": "address",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回标记了喜欢的数量",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.NFTAsset"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/my_orders": {
+            "get": {
+                "description": "获取我的订单列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取我的订单列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NFT所属作品集",
+                        "name": "collection_id",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "maker地址",
+                        "name": "maker",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "NFT的所有者",
+                        "name": "owner",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "订单方向：BUY买单，SELL卖单",
+                        "name": "side",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "订单状态：OPEN、CANCELLED、FINALIZED",
+                        "name": "status",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回我的订单",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/responses.RespMyOrder"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/onboarding": {
+            "post": {
+                "description": "通过metamask实现登录",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "注册或者登录",
+                "parameters": [
+                    {
+                        "example": "0xD962E24F1630774aba2A77F49E5234E9E903D945",
+                        "description": "钱包地址",
+                        "name": "address",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "example": "0x53edb561b0c1719e46e1e6bbbd3d82ff798762a66d0282a9adf47a114e32cbc600c248c247ee1f0fb3a6136a05f0b776db4ac82180442d3a80f3d67dde8290811c",
+                        "description": "metamsak签名，eth_sign格式签名参与签名的key升序排列，签名参数有action、timestamp",
+                        "name": "signature",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "example": "1642749051",
+                        "description": "参与签名的时间戳",
+                        "name": "timestamp",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回jwt_token",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "allOf": [
+                                                {
+                                                    "type": "object"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "jwt_token": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/order": {
+            "get": {
+                "description": "获取单个订单详情",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取单个订单详情",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "订单的hash",
+                        "name": "hash",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回订单信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/responses.RespOrder"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建订单",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "创建订单",
+                "parameters": [
+                    {
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "token_id",
+                        "name": "token_id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "NFT类型",
+                        "name": "schema",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "NFT数量",
+                        "name": "quantity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "订单类型：固定价格（FIXEDPRICE） 英式拍卖（ENGLISHAUCTION） 荷兰拍卖（DUTCHAUCTION）",
+                        "name": "type",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "订单方向：BUY买单，SELL卖单",
+                        "name": "side",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "所属公链",
+                        "name": "chain",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "支付币种",
+                        "name": "payment_token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "价格，支持小数",
+                        "name": "price",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "每页显示数量",
+                        "name": "expired_at",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Wyvern  order的json字符串,注意是string",
+                        "name": "exchange_data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.NFTExchangeData"
+                        }
+                    },
+                    {
+                        "description": "订单的hash",
+                        "name": "hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回订单是否创建成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/order_cancelled": {
+            "post": {
+                "description": "订单取消事件回调",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "订单取消事件回调",
+                "parameters": [
+                    {
+                        "description": "txnHash",
+                        "name": "txn_hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "blockNo",
+                        "name": "block_no",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "订单hash",
+                        "name": "hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "timestamp",
+                        "name": "timestamp",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否处理成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "get": {
+                "description": "获取订单列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取订单列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "合约地址",
+                        "name": "contract",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token_id",
+                        "name": "token_id",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "maker地址",
+                        "name": "maker",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "订单方向：BUY买单，SELL卖单",
+                        "name": "side",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "订单状态：OPEN、CANCELLED、FINALIZED、CLOSED",
+                        "name": "status",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_index",
+                        "in": "path"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页显示数量",
+                        "name": "page_size",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回了订单列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/responses.RespOrder"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/orders_matched": {
+            "post": {
+                "description": "订单匹配成功的回调",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "订单匹配成功的回调",
+                "parameters": [
+                    {
+                        "description": "txnHash",
+                        "name": "txn_hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "blockNo",
+                        "name": "block_no",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "buyHash",
+                        "name": "buy_hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "sellHash",
+                        "name": "sell_hash",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "maker",
+                        "name": "maker",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "taker",
+                        "name": "taker",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "price",
+                        "name": "price",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "metadata",
+                        "name": "metadata",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "timestamp",
+                        "name": "timestamp",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回是否处理成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/payment_tokens": {
+            "get": {
+                "description": "获取所有支持的币种",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取所有支持的币种",
+                "responses": {
+                    "200": {
+                        "description": "返回所有支持的代币列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Pagination"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "list": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.NFTPaymentToken"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/trade_history": {
+            "get": {
+                "description": "获取交易历史的k线数据",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "NFT"
+                ],
+                "summary": "获取交易历史的k线数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "作品集id,如果查询作品集的activities，必填",
+                        "name": "collection_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "合约地址，如果查询作品的activities,该参数和token_id必填",
+                        "name": "contract",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token_id，同上",
+                        "name": "token_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "last7days:-7d, last30days:-30d, all:0, 默认为-90d",
+                        "name": "start",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "返回历史交易k线数据",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/modelx.TradeHistory"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Attribute": {
+            "type": "object",
+            "properties": {
+                "trait_type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTAccount": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "describes": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "links": {
+                    "$ref": "#/definitions/models.NFTLink"
+                },
+                "profile_banner": {
+                    "type": "string"
+                },
+                "profile_img_url": {
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "integer"
+                },
+                "stats": {
+                    "$ref": "#/definitions/models.NFTAccountStats"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.NFTAccountStats": {
+            "type": "object",
+            "properties": {
+                "average_price": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "string"
+                },
+                "floor_price": {
+                    "type": "string"
+                },
+                "market_cap": {
+                    "type": "string"
+                },
+                "num_owners": {
+                    "type": "string"
+                },
+                "num_reports": {
+                    "type": "string"
+                },
+                "one_day_average_price": {
+                    "type": "string"
+                },
+                "one_day_change": {
+                    "type": "string"
+                },
+                "one_day_sales": {
+                    "type": "string"
+                },
+                "one_day_volume": {
+                    "type": "string"
+                },
+                "seven_day_average_price": {
+                    "type": "string"
+                },
+                "seven_day_change": {
+                    "type": "string"
+                },
+                "seven_day_sales": {
+                    "type": "string"
+                },
+                "seven_day_volume": {
+                    "type": "string"
+                },
+                "thirty_day_average_price": {
+                    "type": "string"
+                },
+                "thirty_day_change": {
+                    "type": "string"
+                },
+                "thirty_day_sales": {
+                    "type": "string"
+                },
+                "thirty_day_volume": {
+                    "type": "string"
+                },
+                "total_sales": {
+                    "type": "string"
+                },
+                "total_supply": {
+                    "type": "string"
+                },
+                "total_volume": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTAsset": {
+            "type": "object",
+            "properties": {
+                "asset": {
+                    "$ref": "#/definitions/models.NFTFavorite"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "chain": {
+                    "type": "string"
+                },
+                "collection": {
+                    "$ref": "#/definitions/models.NFTAssetCollection"
+                },
+                "collection_id": {
+                    "type": "integer"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "describes": {
+                    "type": "string"
+                },
+                "external_link": {
+                    "type": "string"
+                },
+                "file_type": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "owner_profile": {
+                    "$ref": "#/definitions/models.NFTAccount"
+                },
+                "payment_token": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string"
+                },
+                "stats": {
+                    "$ref": "#/definitions/models.NFTAssetStats"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "supply": {
+                    "type": "integer"
+                },
+                "token_id": {
+                    "type": "string"
+                },
+                "traits": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Attribute"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTAssetCollection": {
+            "type": "object",
+            "properties": {
+                "banner": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "chain": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "creator_fee": {
+                    "type": "number"
+                },
+                "creator_fee_address": {
+                    "type": "string"
+                },
+                "creator_profile": {
+                    "$ref": "#/definitions/models.NFTAccount"
+                },
+                "describes": {
+                    "type": "string"
+                },
+                "featured_image": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "links": {
+                    "$ref": "#/definitions/models.NFTLink"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "payment_tokens": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "integer"
+                },
+                "stats": {
+                    "$ref": "#/definitions/models.NFTAssetCollectionStats"
+                },
+                "traits": {
+                    "$ref": "#/definitions/models.NFTAssetCollectionTraits"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.NFTAssetCollectionStats": {
+            "type": "object",
+            "properties": {
+                "average_price": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "string"
+                },
+                "floor_price": {
+                    "type": "string"
+                },
+                "market_cap": {
+                    "type": "string"
+                },
+                "num_owners": {
+                    "type": "string"
+                },
+                "num_reports": {
+                    "type": "string"
+                },
+                "one_day_average_price": {
+                    "type": "string"
+                },
+                "one_day_change": {
+                    "type": "string"
+                },
+                "one_day_sales": {
+                    "type": "string"
+                },
+                "one_day_volume": {
+                    "type": "string"
+                },
+                "seven_day_average_price": {
+                    "type": "string"
+                },
+                "seven_day_change": {
+                    "type": "string"
+                },
+                "seven_day_sales": {
+                    "type": "string"
+                },
+                "seven_day_volume": {
+                    "type": "string"
+                },
+                "thirty_day_average_price": {
+                    "type": "string"
+                },
+                "thirty_day_change": {
+                    "type": "string"
+                },
+                "thirty_day_sales": {
+                    "type": "string"
+                },
+                "thirty_day_volume": {
+                    "type": "string"
+                },
+                "total_sales": {
+                    "type": "string"
+                },
+                "total_supply": {
+                    "type": "string"
+                },
+                "total_volume": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTAssetCollectionTraits": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.NFTAssetStats": {
+            "type": "object",
+            "properties": {
+                "favorites_count": {
+                    "type": "integer"
+                },
+                "has_offers": {
+                    "type": "integer"
+                },
+                "last_activity_at": {
+                    "type": "integer"
+                },
+                "last_bid_at": {
+                    "type": "integer"
+                },
+                "last_maker_at": {
+                    "type": "integer"
+                },
+                "last_price": {
+                    "description": "冗余字段提升sql性能",
+                    "type": "string"
+                },
+                "last_sale_at": {
+                    "type": "integer"
+                },
+                "one_day_change": {
+                    "type": "string"
+                },
+                "owners": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.NFTEvent": {
+            "type": "object",
+            "properties": {
+                "asset": {
+                    "$ref": "#/definitions/models.NFTAsset"
+                },
+                "collection_id": {
+                    "type": "integer"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "event_type": {
+                    "type": "string"
+                },
+                "ext": {
+                    "$ref": "#/definitions/models.NFTEventExt"
+                },
+                "from": {
+                    "type": "string"
+                },
+                "from_account": {
+                    "$ref": "#/definitions/models.NFTAccount"
+                },
+                "is_private": {
+                    "type": "integer"
+                },
+                "payment_token": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "to_account": {
+                    "$ref": "#/definitions/models.NFTAccount"
+                },
+                "token_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTEventExt": {
+            "type": "object",
+            "properties": {
+                "block_no": {
+                    "type": "string"
+                },
+                "expired_at": {
+                    "type": "string"
+                },
+                "txn_hash": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTExchangeData": {
+            "type": "object",
+            "required": [
+                "basePrice",
+                "calldata",
+                "exchange",
+                "expirationTime",
+                "extra",
+                "feeMethod",
+                "feeRecipient",
+                "howToCall",
+                "listingTime",
+                "maker",
+                "makerProtocolFee",
+                "makerReferrerFee",
+                "makerRelayerFee",
+                "nonce",
+                "paymentToken",
+                "quantity",
+                "r",
+                "replacementPattern",
+                "s",
+                "saleKind",
+                "salt",
+                "side",
+                "staticExtradata",
+                "staticTarget",
+                "taker",
+                "takerProtocolFee",
+                "takerRelayerFee",
+                "target",
+                "v"
+            ],
+            "properties": {
+                "basePrice": {
+                    "type": "string"
+                },
+                "calldata": {
+                    "type": "string"
+                },
+                "exchange": {
+                    "type": "string"
+                },
+                "expirationTime": {
+                    "type": "string"
+                },
+                "extra": {
+                    "type": "string"
+                },
+                "feeMethod": {
+                    "type": "integer"
+                },
+                "feeRecipient": {
+                    "type": "string"
+                },
+                "howToCall": {
+                    "type": "integer"
+                },
+                "listingTime": {
+                    "type": "string"
+                },
+                "maker": {
+                    "type": "string"
+                },
+                "makerProtocolFee": {
+                    "type": "string"
+                },
+                "makerReferrerFee": {
+                    "type": "string"
+                },
+                "makerRelayerFee": {
+                    "type": "string"
+                },
+                "nonce": {
+                    "type": "integer"
+                },
+                "paymentToken": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "string"
+                },
+                "r": {
+                    "type": "string"
+                },
+                "replacementPattern": {
+                    "type": "string"
+                },
+                "s": {
+                    "type": "string"
+                },
+                "saleKind": {
+                    "type": "integer"
+                },
+                "salt": {
+                    "type": "string"
+                },
+                "side": {
+                    "type": "integer"
+                },
+                "staticExtradata": {
+                    "type": "string"
+                },
+                "staticTarget": {
+                    "type": "string"
+                },
+                "taker": {
+                    "type": "string"
+                },
+                "takerProtocolFee": {
+                    "type": "string"
+                },
+                "takerRelayerFee": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "v": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.NFTFavorite": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "is_favorite": {
+                    "type": "integer"
+                },
+                "token_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTLink": {
+            "type": "object",
+            "properties": {
+                "discord": {
+                    "type": "string"
+                },
+                "instagram": {
+                    "type": "string"
+                },
+                "medium": {
+                    "type": "string"
+                },
+                "telegram": {
+                    "type": "string"
+                },
+                "twitter": {
+                    "type": "string"
+                },
+                "website": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTMeta": {
+            "type": "object",
+            "properties": {
+                "attributes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Attribute"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "external_url": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.NFTPaymentToken": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "decimals": {
+                    "type": "integer"
+                },
+                "eth_price": {
+                    "type": "number"
+                },
+                "gt_price": {
+                    "type": "number"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "integer"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "usd_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "modelx.TradeHistory": {
+            "type": "object",
+            "properties": {
+                "avg_price": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "integer"
+                },
+                "volume": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.NftAssetPrimary": {
+            "type": "object",
+            "required": [
+                "contract",
+                "token_id"
+            ],
+            "properties": {
+                "contract": {
+                    "type": "string"
+                },
+                "token_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.RespAccountPrimary": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.RespBanner": {
+            "type": "object",
+            "properties": {
+                "describes": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sort": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.RespCollectionPage": {
+            "type": "object",
+            "properties": {
+                "banner": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "chain": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "creator_fee": {
+                    "type": "number"
+                },
+                "creator_name": {
+                    "type": "string"
+                },
+                "creator_verified": {
+                    "type": "integer"
+                },
+                "describes": {
+                    "type": "string"
+                },
+                "featured_image": {
+                    "type": "string"
+                },
+                "floor_price": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "integer"
+                },
+                "links": {
+                    "$ref": "#/definitions/models.NFTLink"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owners": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "total_volume": {
+                    "type": "string"
+                },
+                "traits": {
+                    "$ref": "#/definitions/models.NFTAssetCollectionTraits"
+                },
+                "verified": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.RespCollectionPrimary": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.RespMyOrder": {
+            "type": "object",
+            "properties": {
+                "asset": {
+                    "type": "object",
+                    "properties": {
+                        "collection_name": {
+                            "type": "string"
+                        },
+                        "floor_price": {
+                            "type": "string"
+                        },
+                        "image_url": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "closed_at": {
+                    "type": "string"
+                },
+                "collection_id": {
+                    "type": "integer"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "exchange_data": {
+                    "$ref": "#/definitions/models.NFTExchangeData"
+                },
+                "expired_at": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "maker": {
+                    "type": "string"
+                },
+                "maker_account": {
+                    "$ref": "#/definitions/responses.RespAccountPrimary"
+                },
+                "payment_token": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "side": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "token_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.RespNavSearchAccount": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "links": {
+                    "$ref": "#/definitions/models.NFTLink"
+                },
+                "profile_banner_url": {
+                    "type": "string"
+                },
+                "profile_img_url": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.RespNavSearchCollection": {
+            "type": "object",
+            "properties": {
+                "banner": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "chain": {
+                    "type": "string"
+                },
+                "featured_image": {
+                    "type": "string"
+                },
+                "floor_price": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owners": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "total_volume": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.RespOrder": {
+            "type": "object",
+            "properties": {
+                "collection_id": {
+                    "type": "integer"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "exchange_data": {
+                    "$ref": "#/definitions/models.NFTExchangeData"
+                },
+                "expired_at": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "maker": {
+                    "type": "string"
+                },
+                "payment_token": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "side": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "token_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.RespTopAsset": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "collection_id": {
+                    "type": "integer"
+                },
+                "collection_name": {
+                    "type": "string"
+                },
+                "collection_verified": {
+                    "type": "integer"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "favorite_count": {
+                    "type": "integer"
+                },
+                "file_type": {
+                    "type": "string"
+                },
+                "floor_price": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "is_favorite": {
+                    "type": "integer"
+                },
+                "last_price": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "one_day_change": {
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string"
+                },
+                "payment_token": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string"
+                },
+                "token_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.RespTopCollection": {
+            "type": "object",
+            "properties": {
+                "banner": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "chain": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "string"
+                },
+                "creator_name": {
+                    "type": "string"
+                },
+                "creator_verified": {
+                    "type": "integer"
+                },
+                "describes": {
+                    "type": "string"
+                },
+                "featured_image": {
+                    "type": "string"
+                },
+                "floor_price": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owners": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "total_volume": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responsex.Pagination": {
+            "type": "object",
+            "properties": {
+                "list": {},
+                "page_index": {
+                    "type": "integer"
+                },
+                "page_size": {
+                    "type": "integer"
+                },
+                "total_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responsex.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "description": "NFT API",
+            "name": "NFT"
+        }
+    ]
+}

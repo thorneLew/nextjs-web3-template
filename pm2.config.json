@@ -1,0 +1,8 @@
+{
+	"apps": [
+		{
+			"name": "hipo-nft",
+			"script": "PORT=8011 npm run next:start"
+		}
+	]
+}
